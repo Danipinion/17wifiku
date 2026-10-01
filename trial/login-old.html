@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="0; url=http://192.168.78.101:3001" />
+    <title>Connecting to Trial...</title>
+    <script type="text/javascript">
+      // This script builds the new URL and redirects the user
+      function getQueryParams() {
+          var params = {};
+          window.location.search.substring(1).split("&").forEach(function(pair) {
+              var (key, value) = pair.split("=").map(decodeURIComponent);
+              params[key] = value;
+          });
+          return params;
+      }
+
+      window.onload = function() {
+          var params = getQueryParams();
+          // Get the user's MAC address, which the hotspot provides in the URL
+          var mac = params['mac'] || 'unknown';
+
+          // Redirect to your Next.js app with the MAC as a query parameter
+          var redirectUrl = 'http://192.168.78.101:3001?mac=' + encodeURIComponent(mac);
+
+          window.location.href = redirectUrl;
+      };
+    </script>
+  </head>
+  <body>
+    <p>Please wait, connecting to our free trial service...</p>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Default theme for the app -->
+    <style name="Theme.SobatMulya" parent="Theme.AppCompat.Light.NoActionBar" />
+
+    <!-- Splash Screen Theme -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- Set the drawable of the splash screen -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <!-- Set the background color of the splash screen -->
+        <item name="windowSplashScreenBackground">#F0F7FF</item>
+        <!-- Use the theme after splash screen -->
+        <item name="postSplashScreenTheme">@style/Theme.SobatMulya</item>
+    </style>
+</resources>

@@ -1,0 +1,52 @@
+kind: pipeline
+type: docker
+name: deploy-mulya-billing
+
+steps:
+  - name: build-and-push
+    image: docker:latest
+    privileged: true
+    volumes:
+    - name: dockersock
+      path: /var/run/docker.sock
+    settings:
+      registry: 10.0.0.60:5000
+      repo: 10.0.0.60:5000/mulya-billing
+      tags: latest
+      insecure: true
+      build_args_from_env:
+        - AUTH_SECRET
+        - DATABASE_URL
+        - FONNTE_API_KEY
+        - NEXT_PUBLIC_API_KEY
+    environment:
+      AUTH_SECRET: "wifZLQCgSy6Pk4k2cPuU7Mu1OrchicohgmnvcrPmhiO54s="
+      DATABASE_URL:
+        from_secret: database_url
+      FONNTE_API_KEY:
+        from_secret: fonnte_api_key
+      NEXT_PUBLIC_API_KEY: "WIFIKU"
+    commands:
+    - docker build --network=host --build-arg AUTH_SECRET="$AUTH_SECRET" --build-arg DATABASE_URL="$DATABASE_URL" --build-arg FONNTE_API_KEY="$FONNTE_API_KEY" --build-arg NEXT_PUBLIC_API_KEY="$NEXT_PUBLIC_API_KEY" -t 10.0.0.60:5000/mulya-billing:latest .
+    - docker push 10.0.0.60:5000/mulya-billing:latest
+
+  - name: deploy-to-production
+    image: appleboy/drone-ssh
+    settings:
+      host: 10.0.0.102
+      username: root
+      key:
+        from_secret: ssh_key
+      script:
+        - cd /opt/app-billing
+        - docker compose pull
+        - docker compose up -d --force-recreate
+        - docker image prune -f
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+      
+trigger:
+  branch:
+    - main

@@ -1,0 +1,17 @@
+update pada tagihan
+- ketika tandai lunas di klik maka akan menyimpan state tanggal kapan dia di beri tanda lunas✅
+- lalu ketika ditandai lunas akan memanggil api dari app script untuk mencetak nota dan akan mengambil link yang telah di generate dan di taruh di spreedsheet dengan kolom link untuk di simpan di database berdasarkan pelanggan dan periode, jadi nanti si pelanggan bisa mencetak nota tersebut dari hasil link yang di ambil dari spreedsheet ✅
+- sebelum ke logika nota itu aku ingin memperbaiki tambahkan column nama, alamat, idNumber,Abonemen, Potongan di table user pelanggan itu jika sudah ada maka skip ✅
+- menambahkan fitur isolir otomatis integrasi dengan mikrotik
+- di halaman pelanggan di samping kiri tombol logout beri icon gear untuk memunculkan modal dan input ganti password 1 kali ajah dan dari sisi admin bisa berkali kali jadi ketika lupa password bisa menghubungi admin untuk reset password.✅
+- lalu dihalaman pelanggan di bagian kolom aksi tambahkan tombol pengingat tagihan liat semua tagihan dengan status unpaid yang akan mengirim ke pelanggan lalu di halaman  tagihan ketika klik tombol pelunasan setelah mendapatkan link buatkan juga untuk mengirim ke pelanggan bukti pelunasan dan link yang telah di dapatkan tadi. buatkan kata katanya untuk pengingat dan bukti pelusanan aku menggunakan fonnte✅
+- update ui untuk semua return dari actions.ts di tampilkan menggunakan toast notification bukan lagi menggunakan alert dan update ui select sepertinya tanda panahnya itu terlalu mepet di pojok✅
+- update ui dashboard agar memiliki fungsi statistik untuk mempermudah pemantauan bukan hanya kata-kata selamat datang✅
+- buat fungsi import dari excell di halaman manajemen pelanggan untuk mempermudah ✅
+- update ui landing page untuk menambahkan section pricing layanan sesuai di gambar yang di upload✅
+- buat sidebar di halaman admin agar bisa bersembunyi ada togglenya, lalu jika di tampilan mobile hanya ada icon dan jika di tekan akan overlay 90% dan dibelakangnya full 1 layar blur agar contentnya bisa full ✅
+- buat responsive pada halaman manajemen pelanggan dibagian tablenya ketika di mode mobile hide kolom id pelanggan dan nomer hp lalu di halaman manajemen tagihan hide kolom periode dan jumlah serta ganti tulisan di kolom aksi menjadi icon ✅
+- buat agar menjadi progresive web apps yang bisa di install dan buat halaman notfound 404 yang bersifat global dan dan ini kan akan di buat pwa jadi ketika mau kehalaman admin ketika offline buatkan halaman offline juga, di halaman error maupun offline ada tombol untuk mengarahkan ke landing page✅
+- membuat halaman web reporting dibagian admin jadi menambah 1 menu / page lagi dibawah menu keluhan di bagian admin untuk mempermudah pemantauan seperti di setiap harinya, setiap minggu, setiap bulan , atau setiap custom berapa hari maximal 1 bulan memantau siapa saja pelanggan yang telah membayar berikan informasi yang lengkap disitu beserta fitur fitur web reporting lainnya✅
+- buatkan card pada halaman manajemen tagihan sebelum itu buat filter secara default status bukan semua tapi buat yang belum bayar lalu untuk bulan buat bulan ini dan tahun ini secara default setelah itu buat card diatas filter dan serarch dimana isinya merupakan mengandung berapa pelanggan yang belum  bayar berdasarkan filter lalu berapa jika dijumlahkan ✅
+

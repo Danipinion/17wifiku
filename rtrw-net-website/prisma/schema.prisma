@@ -1,0 +1,351 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  PELANGGAN
+  KARYAWAN
+}
+
+enum JobStatus {
+  TODO
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum InvoiceStatus {
+  UNPAID
+  PAID
+}
+
+enum ComplaintStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ReferralStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id                String     @id @default(cuid())
+  name              String
+  username          String?    @unique
+  idNumber          String?   @unique
+  phone             String     @unique
+  password          String
+  address           String?
+  role              Role       @default(PELANGGAN)
+  status            UserStatus @default(ACTIVE)
+  abonemen Float      @default(0)
+  potongan          Float      @default(0)
+  baseSalary        Float      @default(0)
+  genieacsDeviceId  String?    @unique
+  latitude          Float?
+  longitude         Float?
+  notifBilling      Boolean    @default(true)
+  notifPromo        Boolean    @default(true)
+
+  referralCode      String?    @unique
+  
+  genieacsDevices   GenieACSDevice[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoices   Invoice[]
+  complaints Complaint[]
+  jobs       Job[]
+  sessions   Session[]
+  notifications Notification[]
+  referralsMade Referral[] @relation("Referrer")
+  referralEntry Referral? @relation("Referee")
+
+  odpId String?
+  odp   ODP? @relation(fields: [odpId], references: [id])
+
+  converterId String?
+  converter   Converter? @relation(fields: [converterId], references: [id])
+}
+
+model JobType {
+  id          String   @id @default(cuid())
+  name        String
+  price       Float
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  jobs        Job[]
+}
+
+model Job {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  jobTypeId   String
+  jobType     JobType   @relation(fields: [jobTypeId], references: [id])
+  status      JobStatus @default(PENDING)
+  date        DateTime  @default(now())
+  evidence    String?
+  adminPhoto  String?
+  instruction String?
+  notes       String?
+  latitude    Float?
+  longitude   Float?
+  targetLatitude Float?
+  targetLongitude Float?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Invoice {
+  id        String        @id @default(cuid())
+  month     Int
+  year      Int
+  amount    Float
+  status    InvoiceStatus @default(UNPAID)
+  createdAt DateTime      @default(now())
+  paidAt    DateTime?
+  pdfUrl    String?
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  payments Payment[]
+
+  @@unique([userId, month, year])
+}
+
+model Payment {
+  id               String   @id @default(cuid())
+  invoiceId        String?  
+  invoice          Invoice? @relation(fields: [invoiceId], references: [id])
+  bulkInvoiceIds   String?  // Comma separated ID: ID1,ID2,ID3
+  userId           String
+  originalAmount   Float    
+  uniqueCode       Int      
+  totalAmount      Float    
+  status           String   @default("PENDING") // PENDING, SUCCESS, EXPIRED
+  createdAt        DateTime @default(now())
+  expiresAt        DateTime 
+}
+
+model Complaint {
+  id          String          @id @default(cuid())
+  subject     String
+  description String
+  status      ComplaintStatus @default(OPEN)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model BroadcastLog {
+  id             String   @id @default(cuid())
+  message        String
+  target         String   
+  recipientCount Int
+  successCount   Int      @default(0)
+  failedCount    Int      @default(0)
+  status         String   @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  currentIndex   Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  details        BroadcastDetail[]
+}
+
+model BroadcastDetail {
+  id               String       @id @default(cuid())
+  broadcastLogId   String
+  broadcastLog     BroadcastLog @relation(fields: [broadcastLogId], references: [id], onDelete: Cascade)
+  recipientName    String
+  recipientPhone   String
+  status           String       // SUCCESS, FAILED
+  reason           String?      // Error message
+  createdAt        DateTime     @default(now())
+}
+
+model AppVersion {
+  id           String   @id @default(cuid())
+  versionCode  Int
+  versionName  String
+  appType      String   @default("CUSTOMER") // CUSTOMER, EMPLOYEE
+  downloadUrl  String
+  forceUpdate  Boolean  @default(false)
+  releaseNotes String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  type      String   @default("INFO") // INFO, PROMO, MAINTENANCE, UPDATE, DANGER
+  isUrgent  Boolean  @default(false)
+  isActive  Boolean  @default(true)
+  startDate DateTime @default(now())
+  endDate   DateTime? 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceId  String?
+  device    String?
+  location  String?
+  ip        String?
+  userAgent String?
+  lastActive DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@unique([userId, deviceId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  content   String
+  type      String   // e.g., "BILLING", "PROMO", "SYSTEM", "COMPLAINT"
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  metadata  String?  // JSON string for additional data
+}
+
+model Referral {
+  id         String         @id @default(cuid())
+  referrerId String
+  referrer   User           @relation("Referrer", fields: [referrerId], references: [id])
+  refereeId  String         @unique
+  referee    User           @relation("Referee", fields: [refereeId], references: [id])
+  status     ReferralStatus @default(PENDING)
+  discount   Float          @default(10000)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+}
+
+model GenieACSDevice {
+  id        String   @id @default(cuid())
+  deviceId  String   @unique
+  name      String?  // Custom name for the router, e.g. "Router Rumah"
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MonitorState {
+  deviceId     String   @id
+  lastStatus   String   // "online", "offline", "high_redaman"
+  lastRedaman  Float?
+  lastAlertedAt DateTime @default(now())
+}
+
+model GlobalMonitorState {
+  id                Int      @id @default(1)
+  isMassOutage      Boolean  @default(false)
+  lastMassOutageAt  DateTime?
+  updatedAt         DateTime @updatedAt
+}
+
+model OLT {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  latitude  Float?
+  longitude Float?
+  
+  odcs      ODC[]
+  odps      ODP[]
+  converters Converter[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ODC {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  latitude  Float?
+  longitude Float?
+
+  oltId       String?
+  olt         OLT?     @relation(fields: [oltId], references: [id])
+
+  parentOdcId String?
+  parentOdc   ODC?     @relation("OdcToOdc", fields: [parentOdcId], references: [id])
+  childOdcs   ODC[]    @relation("OdcToOdc")
+
+  parentOdpId String?
+  parentOdp   ODP?     @relation("OdpToOdc", fields: [parentOdpId], references: [id])
+
+  converters Converter[]
+  odps      ODP[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Converter {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  latitude  Float?
+  longitude Float?
+
+  oltId     String?
+  olt       OLT?     @relation(fields: [oltId], references: [id])
+
+  odcId     String?
+  odc       ODC?     @relation(fields: [odcId], references: [id])
+  odps      ODP[]
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ODP {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  latitude    Float?
+  longitude   Float?
+  capacity    Int      @default(8)
+  
+  oltId       String?
+  olt         OLT?     @relation(fields: [oltId], references: [id])
+
+  odcId       String?
+  odc         ODC?     @relation(fields: [odcId], references: [id])
+  
+  converterId String?
+  converter   Converter? @relation(fields: [converterId], references: [id])
+
+  parentOdpId String?
+  parentOdp   ODP?      @relation("OdpToOdp", fields: [parentOdpId], references: [id])
+  childOdps   ODP[]     @relation("OdpToOdp")
+
+  childOdcs   ODC[]     @relation("OdpToOdc")
+
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

@@ -1,0 +1,85 @@
+/* app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background-start-rgb: 2, 6, 23; /* bg-gray-950 */
+  --background-end-rgb: 15, 23, 42; /* bg-slate-900 */
+}
+
+@layer components {
+  .input-style {
+    @apply block w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-md focus:ring-blue-500 focus:border-blue-500;
+  }
+  .select-style {
+    @apply block w-full pl-3 pr-10 py-2 bg-slate-800 border border-slate-700 rounded-md focus:ring-blue-500 focus:border-blue-500;
+
+    /* 1. Sembunyikan panah default browser */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+  }
+
+  .btn-filter {
+    @apply px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 rounded-md transition-colors;
+  }
+  .btn-primary {
+    @apply px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-md disabled:bg-blue-800;
+  }
+  .btn-secondary {
+    @apply px-3 py-1.5 text-sm font-semibold bg-slate-700 hover:bg-slate-600 rounded-md;
+  }
+  .btn-filter.active {
+    @apply bg-blue-600 text-white;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: rgb(229 231 235); /* text-gray-200 */
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  scroll-behavior: smooth; /* Membuat scroll #link menjadi halus */
+}
+
+/* Custom scrollbar (opsional, tapi menambah kesan profesional) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a; /* bg-slate-900 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3b82f6; /* bg-blue-500 */
+  border-radius: 10px;
+  border: 3px solid #0f172a;
+}
+
+.rdp {
+  --rdp-cell-size: 36px !important;
+  --rdp-caption-font-size: 1rem !important;
+  --rdp-accent-color: #3b82f6 !important; /* Warna biru tema */
+  --rdp-background-color: #475569 !important; /* Warna biru saat hover */
+}
+.rdp-head_cell {
+  font-size: 0.8rem !important;
+  color: #9ca3af; /* text-gray-400 */
+}
+.rdp-nav_button {
+  color: #9ca3af; /* text-gray-400 */
+}

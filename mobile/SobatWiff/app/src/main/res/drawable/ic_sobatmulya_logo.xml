@@ -1,0 +1,24 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Wifi Waves -->
+    <path
+        android:pathData="M40 40 Q60 20 80 40"
+        android:strokeWidth="4"
+        android:strokeColor="#0061A4"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M48 48 Q60 35 72 48"
+        android:strokeWidth="4"
+        android:strokeColor="#0061A4"
+        android:strokeLineCap="round" />
+    <!-- Stylized M -->
+    <path
+        android:pathData="M30 90 L45 50 L60 75 L75 50 L90 90"
+        android:strokeWidth="8"
+        android:strokeColor="#0061A4"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round" />
+</vector>

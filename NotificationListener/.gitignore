@@ -1,0 +1,23 @@
+.env
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+.apk
+
+# Cloudflare Workers
+backend/.wrangler/
+backend/wrangler.toml.backup
+backend/wrangler.toml
+wrangler.toml
